@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox spacing="15.0" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.facturacionapp.controller.ProductoController">
+
+    <Label text="Gestión de Productos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <!-- Formulario de datos -->
+    <GridPane hgap="10" vgap="10">
+        <Label text="Código:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtCodigo" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Nombre:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <TextField fx:id="txtNombre" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+        <Label text="Precio:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtPrecio" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Existencia:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <TextField fx:id="txtExistencia" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+        <Label text="Categoría:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="cmbCategoria" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <CheckBox fx:id="chkActivo" text="Activo" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    </GridPane>
+
+    <!-- Sección para la imagen -->
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="Seleccionar Imagen" onAction="#seleccionarImagen"/>
+        <ImageView fx:id="imgProducto" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+    </HBox>
+
+    <!-- Botones de Acción CRUD -->
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="Guardar" onAction="#guardar" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Actualizar" onAction="#actualizar" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Eliminar" onAction="#eliminar" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="Limpiar" onAction="#limpiar"/>
+    </HBox>
+
+    <Separator prefWidth="200.0" />
+
+    <!-- Sección de Búsqueda y Filtrado Avanzado (Requerimientos 12, 13, 14) -->
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Label text="Buscar:" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtBuscar" promptText="Código, nombre o categoría..." prefWidth="220.0"/>
+
+        <Label text="Estado:"/>
+        <ComboBox fx:id="cmbFiltroEstado" prefWidth="110.0"/>
+
+        <Label text="Categoría:"/>
+        <ComboBox fx:id="cmbFiltroCategoria" prefWidth="140.0"/>
+
+        <Button text="Limpiar Búsqueda" onAction="#limpiarBusqueda"/>
+    </HBox>
+
+    <!-- Tabla de Productos -->
+    <TableView fx:id="tblProductos" VBox.vgrow="ALWAYS" onMouseClicked="#seleccionarProducto">
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="100.0"/>
+            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="180.0"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="130.0"/>
+            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="90.0"/>
+            <TableColumn fx:id="colExistencia" text="Existencia" prefWidth="90.0"/>
+            <TableColumn fx:id="colActivo" text="Activo" prefWidth="75.0"/>
+        </columns>
+    </TableView>
+</VBox>

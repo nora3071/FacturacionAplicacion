@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.facturacionapp.controller.MenuPrincipalController">
+  <top>
+    <VBox>
+      <MenuBar>
+        <Menu text="Módulos">
+          <!-- Se agregó la opción de Categorías en el menú -->
+          <MenuItem fx:id="mnuCategorias" text="Categorías" onAction="#abrirCategorias"/>
+          <MenuItem fx:id="mnuProductos" text="Productos" onAction="#abrirProductos"/>
+          <MenuItem fx:id="mnuSalir" text="Salir" onAction="#salir"/>
+        </Menu>
+      </MenuBar>
+      <ToolBar>
+        <!-- Se agregó el botón de Categorías en la barra de herramientas -->
+        <Button fx:id="btnCategorias" text="Categorías" onAction="#abrirCategorias"/>
+        <Button fx:id="btnProductos" text="Productos" onAction="#abrirProductos"/>
+        <Button fx:id="btnSalir" text="Salir" onAction="#salir"/>
+      </ToolBar>
+    </VBox>
+  </top>
+  <center>
+    <Label text="Sistema de facturación" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+  </center>
+</BorderPane>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15.0" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ni.edu.uam.facturacionapp.controller.CategoriaController">
+
+    <Label text="Gestión de Categorías" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Label text="Nombre:"/>
+        <TextField fx:id="txtNombre" promptText="Nombre de categoría" prefWidth="250.0"/>
+        <Button text="Guardar" onAction="#guardarCategoria" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Actualizar" onAction="#actualizarCategoria" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="Eliminar" onAction="#eliminarCategoria" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="Limpiar" onAction="#limpiarCampos"/>
+    </HBox>
+
+    <TableView fx:id="tblCategorias" VBox.vgrow="ALWAYS" onMouseClicked="#seleccionarCategoria">
+        <columns>
+            <TableColumn text="ID" prefWidth="50.0">
+                <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Nombre" prefWidth="300.0">
+                <cellValueFactory><PropertyValueFactory property="nombre" /></cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+</VBox>
