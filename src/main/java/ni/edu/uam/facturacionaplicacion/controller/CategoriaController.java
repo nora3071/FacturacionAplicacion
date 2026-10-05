@@ -4,8 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import ni.edu.uam.facturacionapp.dao.CategoriaDao;
-import ni.edu.uam.facturacionapp.model.Categoria;
+import ni.edu.uam.facturacionaplicacion.dao.CategoriaDao;
+import ni.edu.uam.facturacionaplicacion.model.Categoria;
 
 public class CategoriaController {
 
