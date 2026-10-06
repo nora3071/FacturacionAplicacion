@@ -1,6 +1,6 @@
 package ni.edu.uam.facturacionaplicacion.dao;
 
-import ni.edu.uam.facturacionaplicacion.config.DatabaseConnection;
+import ni.edu.uam.facturacionaplicacion.config.DataBaseConnection;
 import ni.edu.uam.facturacionaplicacion.model.Categoria;
 
 import java.sql.Connection;
@@ -16,7 +16,7 @@ public class CategoriaDao {
     public void guardar(Categoria categoria) {
         String sql = "INSERT INTO categoria (nombre, activa) VALUES (?, ?)";
         try (
-                Connection connection = DatabaseConnection.getConnection();
+                Connection connection = DataBaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setString(1, categoria.getNombre());
@@ -32,7 +32,7 @@ public class CategoriaDao {
         List<Categoria> lista = new ArrayList<>();
         String sql = "SELECT id, nombre, activa FROM categoria ORDER BY id ASC";
         try (
-                Connection connection = DatabaseConnection.getConnection();
+                Connection connection = DataBaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet resultSet = statement.executeQuery()
         ) {
@@ -53,7 +53,7 @@ public class CategoriaDao {
     public void actualizar(Categoria categoria) {
         String sql = "UPDATE categoria SET nombre = ?, activa = ? WHERE id = ?";
         try (
-                Connection connection = DatabaseConnection.getConnection();
+                Connection connection = DataBaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setString(1, categoria.getNombre());
@@ -69,7 +69,7 @@ public class CategoriaDao {
     public void eliminar(int id) {
         String sql = "DELETE FROM categoria WHERE id = ?";
         try (
-                Connection connection = DatabaseConnection.getConnection();
+                Connection connection = DataBaseConnection.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setInt(1, id);

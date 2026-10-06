@@ -8,7 +8,7 @@ import lombok.*;
 public class Categoria {
     private Integer id;
     private String nombre;
-    private boolean activa;
+    private boolean activa = true;
 
     @Override
     public String toString() {

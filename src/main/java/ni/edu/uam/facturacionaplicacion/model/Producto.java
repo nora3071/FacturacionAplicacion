@@ -11,7 +11,7 @@ public class Producto {
     private String codigo;
     private String nombre;
     private Categoria categoria;
-    private BigDecimal precioVenta;
+    private BigDecimal precio;
     private int existencia;
     private String rutaImagen;
     private boolean activo;

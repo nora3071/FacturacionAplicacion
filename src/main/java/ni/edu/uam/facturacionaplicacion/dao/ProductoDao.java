@@ -1,6 +1,6 @@
 package ni.edu.uam.facturacionaplicacion.dao;
 
-import ni.edu.uam.facturacionaplicacion.config.DatabaseConnection;
+import ni.edu.uam.facturacionaplicacion.config.DataBaseConnection;
 import ni.edu.uam.facturacionaplicacion.model.Categoria;
 import ni.edu.uam.facturacionaplicacion.model.Producto;
 
@@ -13,13 +13,13 @@ public class ProductoDao {
     public void guardar(Producto producto) {
         String sql = "INSERT INTO producto (codigo, nombre, categoria_id, precio_venta, existencia, ruta_imagen, activo) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             ps.setString(1, producto.getCodigo());
             ps.setString(2, producto.getNombre());
             ps.setInt(3, producto.getCategoria().getId());
-            ps.setBigDecimal(4, producto.getPrecioVenta());
+            ps.setBigDecimal(4, producto.getPrecio());
             ps.setInt(5, producto.getExistencia());
             ps.setString(6, producto.getRutaImagen());
             ps.setBoolean(7, producto.isActivo());
@@ -35,7 +35,7 @@ public class ProductoDao {
         String sql = "SELECT p.*, c.nombre AS categoria_nombre, c.activa AS categoria_activa " +
                 "FROM producto p INNER JOIN categoria c ON p.categoria_id = c.id ORDER BY p.id ASC";
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = DataBaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
@@ -67,7 +67,7 @@ public class ProductoDao {
     public void actualizar(Producto producto) {
         String sql = "UPDATE producto SET codigo = ?, nombre = ?, categoria_id = ?, precio_venta = ?, existencia = ?, ruta_imagen = ?, activo = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, producto.getCodigo());
@@ -79,7 +79,7 @@ public class ProductoDao {
                 stmt.setNull(3, Types.INTEGER);
             }
 
-            stmt.setBigDecimal(4, producto.getPrecioVenta());
+            stmt.setBigDecimal(4, producto.getPrecio());
             stmt.setInt(5, producto.getExistencia());
             stmt.setString(6, producto.getRutaImagen());
             stmt.setBoolean(7, producto.isActivo());
@@ -94,7 +94,7 @@ public class ProductoDao {
     public void eliminar(Integer id) {
         String sql = "DELETE FROM producto WHERE id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
+        try (Connection conn = DataBaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);

@@ -43,11 +43,11 @@ public class ProductoController {
 
     @FXML
     private void initialize() {
-        // Configurar columnas de la tabla
+        // Configurar columnas de la tabla (Corregido 'precio')
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
-        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precioVenta"));
+        colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colExistencia.setCellValueFactory(new PropertyValueFactory<>("existencia"));
         colActivo.setCellValueFactory(new PropertyValueFactory<>("activo"));
 
@@ -72,12 +72,12 @@ public class ProductoController {
         cmbFiltroCategoria.setItems(catsFiltro);
         cmbFiltroCategoria.setValue(catsFiltro.get(0));
 
-        // Inicializar la FilteredList a partir de la ObservableList (ObservableList -> FilteredList -> TableView)
+        // Inicializar la FilteredList
         productosFiltrados = new FilteredList<>(productos, p -> true);
         tblProductos.setItems(productosFiltrados);
         chkActivo.setSelected(true);
 
-        // Listeners para ejecutar filtros automáticos al escribir o cambiar combos
+        // Listeners para ejecutar filtros automáticos
         txtBuscar.textProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
         cmbFiltroEstado.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
         cmbFiltroCategoria.valueProperty().addListener((obs, oldValue, newValue) -> aplicarFiltros());
@@ -90,20 +90,17 @@ public class ProductoController {
         productos.addAll(productoDao.listar());
     }
 
-    // Lógica de filtrado combinada (Búsqueda + Estado + Categoría)
     private void aplicarFiltros() {
         String busqueda = txtBuscar.getText() == null ? "" : txtBuscar.getText().trim().toLowerCase();
         String estadoFiltro = cmbFiltroEstado.getValue() == null ? "Todos" : cmbFiltroEstado.getValue();
         Categoria catFiltro = cmbFiltroCategoria.getValue();
 
         productosFiltrados.setPredicate(prod -> {
-            // 1. Filtro por Búsqueda (código, nombre o categoría) - Insensible a mayúsculas
             boolean coincideBusqueda = busqueda.isEmpty()
                     || prod.getCodigo().toLowerCase().contains(busqueda)
                     || prod.getNombre().toLowerCase().contains(busqueda)
                     || (prod.getCategoria() != null && prod.getCategoria().getNombre().toLowerCase().contains(busqueda));
 
-            // 2. Filtro por Estado (Activo / Inactivo / Todos)
             boolean coincideEstado = true;
             if ("Activos".equalsIgnoreCase(estadoFiltro)) {
                 coincideEstado = prod.isActivo();
@@ -111,7 +108,6 @@ public class ProductoController {
                 coincideEstado = !prod.isActivo();
             }
 
-            // 3. Filtro por Categoría
             boolean coincideCategoria = true;
             if (catFiltro != null && catFiltro.getId() != null && catFiltro.getId() != 0) {
                 coincideCategoria = prod.getCategoria() != null && prod.getCategoria().getId().equals(catFiltro.getId());
@@ -147,7 +143,7 @@ public class ProductoController {
         if (productoSeleccionado != null) {
             txtCodigo.setText(productoSeleccionado.getCodigo());
             txtNombre.setText(productoSeleccionado.getNombre());
-            txtPrecio.setText(String.valueOf(productoSeleccionado.getPrecioVenta()));
+            txtPrecio.setText(String.valueOf(productoSeleccionado.getPrecio()));
             txtExistencia.setText(String.valueOf(productoSeleccionado.getExistencia()));
             chkActivo.setSelected(productoSeleccionado.isActivo());
 
@@ -211,7 +207,7 @@ public class ProductoController {
             productoSeleccionado.setCodigo(txtCodigo.getText().trim());
             productoSeleccionado.setNombre(txtNombre.getText().trim());
             productoSeleccionado.setCategoria(cmbCategoria.getValue());
-            productoSeleccionado.setPrecioVenta(precio);
+            productoSeleccionado.setPrecio(precio);
             productoSeleccionado.setExistencia(existencia);
             productoSeleccionado.setRutaImagen(rutaImagen);
             productoSeleccionado.setActivo(chkActivo.isSelected());
@@ -259,7 +255,6 @@ public class ProductoController {
         tblProductos.getSelectionModel().clearSelection();
     }
 
-    // Sistema de Validaciones según punto 15 de la guía
     private boolean validarEntradas(boolean esEdicion) {
         String codigo = txtCodigo.getText().trim();
         String nombre = txtNombre.getText().trim();
@@ -281,7 +276,6 @@ public class ProductoController {
             return false;
         }
 
-        // Validación de código duplicado
         for (Producto p : productos) {
             if (p.getCodigo().equalsIgnoreCase(codigo)) {
                 if (!esEdicion || (productoSeleccionado != null && !p.getId().equals(productoSeleccionado.getId()))) {
@@ -291,10 +285,8 @@ public class ProductoController {
             }
         }
 
-        // Validación numérica de precio
-        BigDecimal precio;
         try {
-            precio = new BigDecimal(precioStr);
+            BigDecimal precio = new BigDecimal(precioStr);
             if (precio.compareTo(BigDecimal.ZERO) <= 0) {
                 mensaje(Alert.AlertType.WARNING, "El precio debe ser mayor que cero.");
                 return false;
@@ -304,7 +296,6 @@ public class ProductoController {
             return false;
         }
 
-        // Validación numérica de existencia
         try {
             int existencia = Integer.parseInt(existenciaStr);
             if (existencia < 0) {

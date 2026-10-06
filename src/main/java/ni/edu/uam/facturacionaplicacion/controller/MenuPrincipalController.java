@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import ni.edu.uam.facturacionapp.FacturacionApplication;
+import ni.edu.uam.facturacionaplicacion.util.FacturacionApplication;
 
 public class MenuPrincipalController {
 
@@ -20,7 +20,7 @@ public class MenuPrincipalController {
     private void abrirCategorias() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    FacturacionApplication.class.getResource("/ni/edu/uam/facturacionapp/fxml/categoria-view.fxml")
+                    FacturacionApplication.class.getResource("/ni/edu/uam/facturacionaplicacion/categoria-view.fxml")
             );
             Scene scene = new Scene(loader.load(), 850, 600);
             Stage stage = new Stage();
@@ -45,7 +45,7 @@ public class MenuPrincipalController {
         try {
             // Se agregó /fxml/ a la ruta para coincidir con la carpeta en resources
             FXMLLoader loader = new FXMLLoader(
-                    FacturacionApplication.class.getResource("/ni/edu/uam/facturacionapp/fxml/producto-view.fxml")
+                    FacturacionApplication.class.getResource("/ni/edu/uam/facturacionaplicacion/producto-view.fxml")
             );
             Scene scene = new Scene(loader.load(), 850, 600);
             Stage stage = new Stage();

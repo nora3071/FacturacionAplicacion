@@ -22,20 +22,27 @@ public class CategoriaController {
     }
 
     private void cargarDatos() {
-        // Se cambió obtenerTodas() por listar()
         listaCategorias = FXCollections.observableArrayList(categoriaDao.listar());
         tblCategorias.setItems(listaCategorias);
     }
 
     @FXML
     private void guardarCategoria() {
-        if (txtNombre.getText().isEmpty()) return;
+        System.out.println("--> Se presionó el botón Guardar");
+
+        if (txtNombre.getText().isEmpty()) {
+            System.out.println("--> El campo de texto está vacío");
+            return;
+        }
 
         Categoria nueva = new Categoria();
         nueva.setNombre(txtNombre.getText());
+        nueva.setActiva(true);
 
-        // Se cambió insertar() por guardar()
+        System.out.println("--> Intentando guardar la categoría: " + nueva.getNombre());
         categoriaDao.guardar(nueva);
+
+        System.out.println("--> Guardado intentado, recargando datos...");
         cargarDatos();
         limpiarCampos();
     }
@@ -46,7 +53,6 @@ public class CategoriaController {
 
         categoriaSeleccionada.setNombre(txtNombre.getText());
 
-        // Asegúrate de que este método se llame actualizar en tu CategoriaDao
         categoriaDao.actualizar(categoriaSeleccionada);
         cargarDatos();
         limpiarCampos();
@@ -56,7 +62,6 @@ public class CategoriaController {
     private void eliminarCategoria() {
         if (categoriaSeleccionada == null) return;
 
-        // Asegúrate de que este método se llame eliminar en tu CategoriaDao
         categoriaDao.eliminar(categoriaSeleccionada.getId());
         cargarDatos();
         limpiarCampos();
