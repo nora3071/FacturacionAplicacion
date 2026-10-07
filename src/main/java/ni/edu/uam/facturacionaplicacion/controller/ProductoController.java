@@ -43,7 +43,7 @@ public class ProductoController {
 
     @FXML
     private void initialize() {
-        // Configurar columnas de la tabla (Corregido 'precio')
+        // Configurar columnas de la tabla
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
@@ -51,15 +51,8 @@ public class ProductoController {
         colExistencia.setCellValueFactory(new PropertyValueFactory<>("existencia"));
         colActivo.setCellValueFactory(new PropertyValueFactory<>("activo"));
 
-        // Cargar Categorías en Formulario y Filtro
+        // Cargar Categorías desde la Base de Datos
         List<Categoria> listaCategorias = categoriaDao.listar();
-        if (listaCategorias.isEmpty()) {
-            categoriaDao.guardar(new Categoria(null, "Alimentos", true));
-            categoriaDao.guardar(new Categoria(null, "Bebidas", true));
-            categoriaDao.guardar(new Categoria(null, "Limpieza", true));
-            listaCategorias = categoriaDao.listar();
-        }
-
         cmbCategoria.setItems(FXCollections.observableArrayList(listaCategorias));
 
         // Cargar combos de filtro

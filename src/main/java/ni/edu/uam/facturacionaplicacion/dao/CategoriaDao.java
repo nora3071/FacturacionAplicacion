@@ -12,8 +12,8 @@ import java.util.List;
 
 public class CategoriaDao {
 
-    // 1. Método para Crear (Insertar)
-    public void guardar(Categoria categoria) {
+    // 1. Guardar
+    public void guardar(Categoria categoria) throws SQLException {
         String sql = "INSERT INTO categoria (nombre, activa) VALUES (?, ?)";
         try (
                 Connection connection = DataBaseConnection.getConnection();
@@ -22,12 +22,10 @@ public class CategoriaDao {
             statement.setString(1, categoria.getNombre());
             statement.setBoolean(2, categoria.isActiva());
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    // 2. Método para Leer (Listar todas las categorías)
+    // 2. Listar
     public List<Categoria> listar() {
         List<Categoria> lista = new ArrayList<>();
         String sql = "SELECT id, nombre, activa FROM categoria ORDER BY id ASC";
@@ -49,8 +47,8 @@ public class CategoriaDao {
         return lista;
     }
 
-    // 3. Método para Actualizar (Modificar)
-    public void actualizar(Categoria categoria) {
+    // 3. Actualizar
+    public void actualizar(Categoria categoria) throws SQLException {
         String sql = "UPDATE categoria SET nombre = ?, activa = ? WHERE id = ?";
         try (
                 Connection connection = DataBaseConnection.getConnection();
@@ -60,13 +58,11 @@ public class CategoriaDao {
             statement.setBoolean(2, categoria.isActiva());
             statement.setInt(3, categoria.getId());
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    // 4. Método para Eliminar (Borrar)
-    public void eliminar(int id) {
+    // 4. Eliminar
+    public void eliminar(int id) throws SQLException {
         String sql = "DELETE FROM categoria WHERE id = ?";
         try (
                 Connection connection = DataBaseConnection.getConnection();
@@ -74,8 +70,64 @@ public class CategoriaDao {
         ) {
             statement.setInt(1, id);
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    }
+
+    // Punto 5: Verificar nombre duplicado al Insertar
+    public boolean existeNombre(String nombre) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM categoria WHERE LOWER(nombre) = LOWER(?)";
+
+        try (
+                Connection cn = DataBaseConnection.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql)
+        ) {
+            ps.setString(1, nombre);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Punto 5: Excluir la categoría que se está modificando al Actualizar (UPDATE)
+    public boolean existeNombreExcluyendoId(String nombre, int idCategoria) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM categoria WHERE LOWER(nombre) = LOWER(?) AND id != ?";
+
+        try (
+                Connection cn = DataBaseConnection.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql)
+        ) {
+            ps.setString(1, nombre);
+            ps.setInt(2, idCategoria);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Punto 7: Validar eliminación de Categoria (Integridad referencial)
+    public boolean tieneProductos(int categoriaId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM producto WHERE categoria_id = ?";
+
+        try (
+                Connection cn = DataBaseConnection.getConnection();
+                PreparedStatement ps = cn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, categoriaId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }
