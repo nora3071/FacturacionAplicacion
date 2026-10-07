@@ -10,7 +10,8 @@ import java.util.List;
 
 public class ProductoDao {
 
-    public void guardar(Producto producto) {
+    // Punto 16: try-with-resources para guardar producto
+    public void guardar(Producto producto) throws SQLException {
         String sql = "INSERT INTO producto (codigo, nombre, categoria_id, precio_venta, existencia, ruta_imagen, activo) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DataBaseConnection.getConnection();
@@ -25,11 +26,10 @@ public class ProductoDao {
             ps.setBoolean(7, producto.isActivo());
 
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
+    // Punto 16: try-with-resources para consultar lista de productos
     public List<Producto> listar() {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT p.*, c.nombre AS categoria_nombre, c.activa AS categoria_activa " +
@@ -64,7 +64,8 @@ public class ProductoDao {
         return productos;
     }
 
-    public void actualizar(Producto producto) {
+    // Punto 16: try-with-resources para actualizar producto
+    public void actualizar(Producto producto) throws SQLException {
         String sql = "UPDATE producto SET codigo = ?, nombre = ?, categoria_id = ?, precio_venta = ?, existencia = ?, ruta_imagen = ?, activo = ? WHERE id = ?";
 
         try (Connection conn = DataBaseConnection.getConnection();
@@ -86,12 +87,11 @@ public class ProductoDao {
             stmt.setInt(8, producto.getId());
 
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void eliminar(Integer id) {
+    // Punto 16: try-with-resources para eliminar producto
+    public void eliminar(Integer id) throws SQLException {
         String sql = "DELETE FROM producto WHERE id = ?";
 
         try (Connection conn = DataBaseConnection.getConnection();
@@ -99,8 +99,43 @@ public class ProductoDao {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    }
+
+    // Puntos 14 y 16: Verificar código duplicado al Insertar
+    public boolean existeCodigo(String codigo) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM producto WHERE LOWER(codigo) = LOWER(?)";
+
+        try (Connection cn = DataBaseConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setString(1, codigo.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Puntos 14 y 16: Excluir el propio código en UPDATE
+    public boolean existeCodigoExcluyendoId(String codigo, int idProducto) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM producto WHERE LOWER(codigo) = LOWER(?) AND id != ?";
+
+        try (Connection cn = DataBaseConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setString(1, codigo.trim());
+            ps.setInt(2, idProducto);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
     }
 }
